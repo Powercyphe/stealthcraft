@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "stealthcraft",
+  "version": "${version}",
+  "name": "StealthCraft",
+  "description": "Turn Minecraft into a stealth game, with entity vision cones, customizable interactions upon being seen and more.",
+  "authors": [
+    "Powercyphe",
+    "ekvyn"
+  ],
+  "contact": {},
+  "license": "All-Rights-Reserved",
+  "icon": "assets/stealthcraft/icon.png",
+  "accessWidener": "stealthcraft.classtweaker",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.powercyphe.stealthcraft.common.StealthCraft"
+    ],
+    "client": [
+      "dev.powercyphe.stealthcraft.client.StealthCraftClient"
+    ]
+  },
+  "mixins": [
+    "stealthcraft.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=${loader_version}",
+    "fabric-api": "*",
+    "minecraft": "${minecraft_version}"
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.powercyphe.stealthcraft.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "mixins": [
+    "BrainMixin",
+    "GoalSelectorMixin",
+    "LivingEntityMixin",
+    "NearestAttackableTargetGoalMixin",
+    "accessor.LookAtPlayerGoalAccessor",
+    "accessor.TargetGoalAccessor"
+  ],
+  "client": [
+    "client.EnderDragonRendererMixin",
+    "client.EntityRendererMixin",
+    "client.EntityRenderStateMixin",
+    "client.LivingEntityRendererMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "overwrites": {
+    "requireAnnotations": true
+  }
+}

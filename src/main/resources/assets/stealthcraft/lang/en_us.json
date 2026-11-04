@@ -1,0 +1,41 @@
+{
+  "stealthcraft.midnightconfig.title": "Stealthcraft",
+
+  "stealthcraft.midnightconfig.seenMode": "Seen Mode",
+  "stealthcraft.midnightconfig.seenMode.tooltip": "Controls what happens once fully noticed by an entity.",
+
+  "stealthcraft.midnightconfig.damageMode": "Damage Mode",
+  "stealthcraft.midnightconfig.damageMode.tooltip": "Controls in what way the player will be damaged once noticed.",
+
+  "stealthcraft.midnightconfig.damageAmount": "Damage Amount",
+  "stealthcraft.midnightconfig.damageAmount.tooltip": "The amount of damage to deal when the player is noticed.",
+
+  "stealthcraft.midnightconfig.targetMode": "Target Mode",
+  "stealthcraft.midnightconfig.targetMode.tooltip": "Which entities should start targeting the player when noticed.",
+
+  "stealthcraft.midnightconfig.targetTicks": "Target Ticks",
+  "stealthcraft.midnightconfig.targetTicks.tooltip": "For how many ticks mobs that have been alerted of the player will target them for.",
+
+  "stealthcraft.midnightconfig.targetRadius": "Target Radius",
+  "stealthcraft.midnightconfig.targetRadius.tooltip": "In what range mobs should be alerted of the player when they are seen by another mob.",
+
+  "stealthcraft.midnightconfig.minDetectionTicks": "Minimum Detection Ticks",
+  "stealthcraft.midnightconfig.minDetectionTicks.tooltip": "How many ticks it should take at minimum for a mob to detect a player.",
+
+  "stealthcraft.midnightconfig.entityGoalTweaks": "Entity Goal Tweaks",
+  "stealthcraft.midnightconfig.entityGoalTweaks.tooltip": "Controls if entity goals should be tweaked to avoid possibly frustrating behavior (such as entities looking at the player).",
+
+  "stealthcraft.midnightconfig.coneColor": "Cone Color",
+
+
+  "stealthcraft.midnightconfig.enum.SeenMode.KILL": "Kill",
+  "stealthcraft.midnightconfig.enum.SeenMode.DAMAGE": "Damage",
+  "stealthcraft.midnightconfig.enum.SeenMode.TARGET": "Target",
+
+  "stealthcraft.midnightconfig.enum.DamageMode.ENTITY": "Entity",
+  "stealthcraft.midnightconfig.enum.DamageMode.FULL_BYPASS": "Full Bypass",
+
+  "stealthcraft.midnightconfig.enum.TargetMode.SINGLE": "Single",
+  "stealthcraft.midnightconfig.enum.TargetMode.RADIUS": "Radius",
+  "stealthcraft.midnightconfig.enum.TargetMode.ALL": "All"
+}
