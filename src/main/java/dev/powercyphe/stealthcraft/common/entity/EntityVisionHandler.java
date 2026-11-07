@@ -3,11 +3,16 @@ package dev.powercyphe.stealthcraft.common.entity;
 import dev.powercyphe.stealthcraft.common.SCConfig;
 import dev.powercyphe.stealthcraft.common.init.SCAttachmentTypes;
 import dev.powercyphe.stealthcraft.common.init.SCMemoryModuleTypes;
+import dev.powercyphe.stealthcraft.common.util.Quad;
 import dev.powercyphe.stealthcraft.common.util.SCUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.damagesource.DamageTypes;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.player.Player;
@@ -27,6 +32,9 @@ public class EntityVisionHandler {
     private float lastNotice = 0F;
     private int noticeVisibility, lastNoticeVisibility = 0;
 
+    public boolean coneChanged = true;
+    public List<Quad> cone = new ArrayList<>();
+
     public EntityVisionHandler(LivingEntity entity) {
         this.entity = entity;
         this.vision = EntityVisionRegistry.getVisionFor(entity);
@@ -37,6 +45,10 @@ public class EntityVisionHandler {
 
         Level level = this.entity.level();
         if (level instanceof ServerLevel serverLevel) {
+            if (this.vision.range(this.entity) <= 0) {
+                this.entity.getBrain().setMemory(SCMemoryModuleTypes.CAN_TARGET, true);
+                return;
+            }
             SCUtil.updatePlayerVisibility(serverLevel, this.entity);
 
             var players = serverLevel.getPlayers(this::isVisible);
@@ -72,6 +84,8 @@ public class EntityVisionHandler {
                 this.setNotice(Math.max(this.notice() - 0.02F, 0F));
             }
         } else {
+            this.coneChanged = true;
+
             this.lastNoticeVisibility = this.noticeVisibility;
             if (this.notice() > 0 || this.targetTime() > 0) {
                 if (this.noticeVisibility < NOTICE_VISIBILITY_MAX) {
@@ -151,4 +165,7 @@ public class EntityVisionHandler {
         this.entity.setAttached(SCAttachmentTypes.NOTICE, notice);
     }
 
+    public boolean shouldRender(Entity camera) {
+        return this.entity.distanceTo(camera) < this.getVision().range(camera) * 3;
+    }
 }

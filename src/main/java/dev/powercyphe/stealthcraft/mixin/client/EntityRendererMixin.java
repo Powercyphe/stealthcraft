@@ -24,7 +24,8 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
                 EntityVision vision = handler.getVision();
 
                 double range = vision.range(living);
-                AABB coneBox = AABB.ofSize(vision.eyePos(living).add(vision.direction(living).scale(range / 2)), range, range, range);
+                AABB coneBox = AABB.ofSize(vision.eyePos(living)
+                        .add(vision.direction3(living).scale(range / 2)), range, range, range);
                 if (culler.isVisible(coneBox)) {
                     return true;
                 }

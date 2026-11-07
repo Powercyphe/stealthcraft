@@ -26,17 +26,21 @@ public class NoticeRenderLayer<S extends LivingEntityRenderState, M extends Enti
         poseStack.translate(0, 1.501F, 0);
 
         poseStack.pushPose();
-        poseStack.translate(0, -state.eyeHeight, 0);
+        poseStack.rotateDegrees(Axis.YP, -state.bodyRot);
+        poseStack.scale(1, -1, -1);
 
-        poseStack.rotate(Axis.YP.rotationDegrees(state.yRot));
-        poseStack.rotate(Axis.XP.rotationDegrees(state.xRot));
+        poseStack.rotateAround(Axis.YP.rotationDegrees(-noticeState.coneRotation.y)
+                        .mul(Axis.XP.rotationDegrees(-noticeState.coneRotation.x)),
+                0F, noticeState.coneY, 0F);
 
-        submit.submitCustomGeometry(poseStack, SCRenderTypes.CONE_FILL, new ConeRenderer(noticeState.entityCone));
+        // USED FOR DEBUG
+        // submit.submitCustomGeometry(poseStack, SCRenderTypes.CONE, new ConeOutlineRenderer(noticeState.entityCone));
+        submit.submitCustomGeometry(poseStack, SCRenderTypes.CONE_FILL, new ConeRenderer(noticeState.coneQuads));
         poseStack.popPose();
 
-        poseStack.rotate(Axis.YN.rotationDegrees(state.bodyRot));
-
+        poseStack.rotateDegrees(Axis.YN, state.bodyRot);
         poseStack.translate(0, -state.boundingBoxHeight * 1.75, 0);
+
         submit.submitCustomGeometry(poseStack, SCRenderTypes.NOTICE,
                 new NoticeRenderer(
                         ARGB.linearLerp(noticeState.noticeProgress, 0xFF33FF00, 0xFFFF3300),

@@ -26,6 +26,7 @@
   "stealthcraft.midnightconfig.entityGoalTweaks.tooltip": "Controls if entity goals should be tweaked to avoid possibly frustrating behavior (such as entities looking at the player).",
 
   "stealthcraft.midnightconfig.coneColor": "Cone Color",
+  "stealthcraft.midnightconfig.coneColorOpacity": "Cone Opacity",
 
 
   "stealthcraft.midnightconfig.enum.SeenMode.KILL": "Kill",

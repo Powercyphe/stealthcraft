@@ -21,7 +21,7 @@ public interface SCPipelines {
             .withVertexShader("core/position_color")
             .withFragmentShader("core/position_color")
             .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR_NORMAL)
-            .withPrimitiveTopology(PrimitiveTopology.TRIANGLES)
+            .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .withDepthStencilState(DepthStencilState.DEFAULT)
             .withCull(false)
             .buildSnippet();

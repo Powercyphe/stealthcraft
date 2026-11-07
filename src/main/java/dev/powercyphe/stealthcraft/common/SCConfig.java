@@ -21,22 +21,31 @@ public class SCConfig extends MidnightConfig {
 
     @Entry
     @Condition(requiredOption = "seenMode", requiredValue = "TARGET")
-    public static int targetTicks = 300;
-
-    @Entry
-    @Condition(requiredOption = "seenMode", requiredValue = "TARGET")
     @Condition(requiredOption = "targetMode", requiredValue = "RADIUS")
     public static int targetRadius = 30;
 
+    @Entry
+    @Condition(requiredOption = "seenMode", requiredValue = "TARGET")
+    public static int targetTicks = 300;
+
+    @Comment
+    public static String spacer$mode;
+
 
     @Entry(min = 0, max = 100, isSlider = true)
-    public static int minDetectionTicks = 10;
+    public static int minDetectionTicks = 0;
 
     @Entry
-    public static boolean entityGoalTweaks = true;
+    public static boolean entityGoalTweaks = false;
+
+    @Comment
+    public static String spacer$color;
 
     @Entry(isColor = true)
     public static String coneColor = "#FF1100";
+
+    @Entry(min = 0F, max = 1F, isSlider = true)
+    public static float coneColorOpacity = 0.2F;
 
     public enum SeenMode {
         KILL,

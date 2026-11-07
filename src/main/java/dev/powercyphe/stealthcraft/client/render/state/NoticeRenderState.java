@@ -1,16 +1,21 @@
 package dev.powercyphe.stealthcraft.client.render.state;
 
-import dev.powercyphe.stealthcraft.common.util.Triangle;
+import dev.powercyphe.stealthcraft.common.entity.EntityVisionHandler;
+import dev.powercyphe.stealthcraft.common.util.Quad;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.phys.Vec2;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class NoticeRenderState {
-    public List<Triangle> entityCone = new ArrayList<>();
+    public List<Quad> coneQuads = new ArrayList<>();
+    public Vec2 coneRotation = Vec2.ZERO;
+    public float coneY = 0F;
 
     public float noticeProgress = 0F;
     public float noticeVisibility = 0F;
@@ -18,11 +23,22 @@ public class NoticeRenderState {
     public CameraRenderState cameraState = new CameraRenderState();
 
     public void extract(LivingEntity entity, EntityRenderState state, float partialTicks) {
-        if (entity.getVisionHandler() != null) {
-            this.entityCone = entity.getVisionHandler().getVision().getTriangles(entity, Minecraft.getInstance().player);
+        LocalPlayer player = Minecraft.getInstance().player;
 
-            this.noticeProgress = entity.getVisionHandler().getNoticeProgress(partialTicks);
-            this.noticeVisibility = entity.getVisionHandler().getNoticeVisibility(partialTicks);
+        if (entity.getVisionHandler() != null && entity.getVisionHandler().shouldRender(player)) {
+            EntityVisionHandler handler = entity.getVisionHandler();
+            if (handler.coneChanged) {
+                handler.coneChanged = false;
+
+                handler.cone = handler.getVision().getQuads(entity, player);
+            }
+
+            this.coneQuads = handler.cone;
+            this.coneRotation = handler.getVision().direction(entity, partialTicks);
+            this.coneY = handler.getVision().eyeOffset(entity);
+
+            this.noticeProgress = handler.getNoticeProgress(partialTicks);
+            this.noticeVisibility = handler.getNoticeVisibility(partialTicks);
         }
     }
 
