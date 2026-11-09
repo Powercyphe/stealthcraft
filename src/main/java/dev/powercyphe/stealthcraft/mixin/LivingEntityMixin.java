@@ -14,21 +14,21 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements VisionHandlerHolder {
+public abstract class LivingEntityMixin extends Entity implements VisionHandlerHolder<LivingEntity> {
 
     public LivingEntityMixin(EntityType<?> type, Level level) {
         super(type, level);
     }
 
     @Unique
-    private EntityVisionHandler visionHandler = null;
+    private EntityVisionHandler<LivingEntity> visionHandler = null;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void stealthcraft$initVisionHandler(EntityType<?> type, Level level, CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
 
         if (!(entity instanceof Player)) {
-            this.visionHandler = new EntityVisionHandler(entity);
+            this.visionHandler = new EntityVisionHandler<>(entity);
         }
     }
 
@@ -40,7 +40,7 @@ public abstract class LivingEntityMixin extends Entity implements VisionHandlerH
     }
 
     @Override
-    public EntityVisionHandler getVisionHandler() {
+    public EntityVisionHandler<LivingEntity> getVisionHandler() {
         return this.visionHandler;
     }
 }

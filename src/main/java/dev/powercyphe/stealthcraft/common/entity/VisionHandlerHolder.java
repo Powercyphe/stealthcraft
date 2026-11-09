@@ -1,6 +1,8 @@
 package dev.powercyphe.stealthcraft.common.entity;
 
-public interface VisionHandlerHolder {
+import net.minecraft.world.entity.LivingEntity;
 
-    EntityVisionHandler getVisionHandler();
+public interface VisionHandlerHolder<E extends LivingEntity> {
+
+    EntityVisionHandler<E> getVisionHandler();
 }

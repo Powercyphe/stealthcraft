@@ -23,9 +23,9 @@ import net.minecraft.world.phys.AABB;
 import java.util.ArrayList;
 import java.util.List;
 
-public class EntityVisionHandler {
-    private final LivingEntity entity;
-    private final EntityVision vision;
+public class EntityVisionHandler<E extends LivingEntity> {
+    private final E entity;
+    private final EntityVision<E> vision;
 
     private static final int NOTICE_VISIBILITY_MAX = 20;
 
@@ -35,7 +35,7 @@ public class EntityVisionHandler {
     public boolean coneChanged = true;
     public List<Quad> cone = new ArrayList<>();
 
-    public EntityVisionHandler(LivingEntity entity) {
+    public EntityVisionHandler(E entity) {
         this.entity = entity;
         this.vision = EntityVisionRegistry.getVisionFor(entity);
     }
@@ -137,7 +137,7 @@ public class EntityVisionHandler {
         return !(player.isCreative() || player.isSpectator()) && this.vision.isVisible(this.entity, player);
     }
 
-    public EntityVision getVision() {
+    public EntityVision<E> getVision() {
         return this.vision;
     }
 
@@ -166,6 +166,8 @@ public class EntityVisionHandler {
     }
 
     public boolean shouldRender(Entity camera) {
-        return this.entity.distanceTo(camera) < this.getVision().range(camera) * 3;
+        float range = this.getVision().range(this.entity);
+        return this.entity.distanceTo(camera) <
+                 range + Math.sqrt(range) * 3;
     }
 }

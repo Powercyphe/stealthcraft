@@ -26,7 +26,7 @@ public class NoticeRenderState {
         LocalPlayer player = Minecraft.getInstance().player;
 
         if (entity.getVisionHandler() != null && entity.getVisionHandler().shouldRender(player)) {
-            EntityVisionHandler handler = entity.getVisionHandler();
+            EntityVisionHandler<LivingEntity> handler = entity.getVisionHandler();
             if (handler.coneChanged) {
                 handler.coneChanged = false;
 

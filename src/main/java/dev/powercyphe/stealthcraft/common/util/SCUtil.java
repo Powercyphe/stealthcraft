@@ -1,12 +1,16 @@
 package dev.powercyphe.stealthcraft.common.util;
 
+import dev.powercyphe.stealthcraft.common.SCConfig;
 import dev.powercyphe.stealthcraft.common.init.SCAttachmentTypes;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
@@ -30,10 +34,10 @@ public interface SCUtil {
         Vec3 base = eyePos.subtract(entity.position());
         Vec3 end = eyePos.add(Vec3.directionFromRotation(dir).scale(range));
 
-        int cones = Math.clamp(Mth.ceil(Math.max(1, range / 10) * radius), 2, 64);
-        int points = 24;
+        int cones = Mth.lerpInt(SCConfig.coneComplexity, 4, 8) * (int) Math.clamp(Math.max(1, range / 8) * (radius / (Math.PI * 3)), 2, 4);
+        int points = Mth.lerpInt(SCConfig.coneComplexity, 16, 32);
 
-        for (int cone = 0; cone < cones; cone++) {
+        for (int cone = 0; cone <= cones; cone++) {
             Vec3[] ring = new Vec3[points];
 
             for (int p = 0; p < points; p++) {
@@ -41,7 +45,7 @@ public interface SCUtil {
                 Vec3 offset = new Vec3(Math.cos(m * Math.PI * 2), Math.sin(m * Math.PI * 2), 0)
                         .xRot(Mth.DEG_TO_RAD * -dir.x)
                         .yRot(Mth.DEG_TO_RAD * -dir.y)
-                        .scale(radius * (double) cone / cones)
+                        .scale(radius * ((double) cone / (double) cones))
                         ;
 
                 Vec3 cPos = ray(level, eyePos, eyePos.vectorTo(end.add(offset)), range);

@@ -14,118 +14,124 @@ import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
-public record EntityVision(Function<Entity, Float> fov, Function<Entity, Float> range, Function<Entity, Float> eyeOffset, BiFunction<Entity, Float, Vec2> direction) {
-    public static final EntityVision DEFAULT = EntityVision.builder().build();
+public record EntityVision<E extends LivingEntity>(Function<E, Float> fov, Function<E, Float> range, Function<E, Float> eyeOffset, BiFunction<E, Float, Vec2> direction) {
+    public static final EntityVision<?> DEFAULT = EntityVision.builder().build();
 
     public static final float DEFAULT_FOV = 115F;
     public static final float DEFAULT_RANGE = 16F;
 
-    public List<Quad> getQuads(LivingEntity entity, LivingEntity target) {
+    public List<Quad> getQuads(E entity, LivingEntity target) {
         float range = this.range(entity, target);
         float radius = this.coneRadius(entity, range);
 
        return SCUtil.getConeQuads(entity, this.eyePos(entity), this.direction(entity), range, radius);
     }
 
-    public boolean isVisible(LivingEntity entity, LivingEntity target) {
+    public boolean isVisible(E entity, LivingEntity target) {
         float range = this.range(entity, target);
         float radius = this.coneRadius(entity, range);
 
         Vec3 tip = this.eyePos(entity);
         Vec3 dir = this.direction3(entity);
-        return SCUtil.insideCone(target.getEyePosition(), tip, dir, range, radius) && entity.hasLineOfSight(target);
+        return SCUtil.insideCone(target.getEyePosition(), tip, dir, range, radius)
+                && this.hasLineOfSight(entity, target);
     }
 
-    public float coneRadius(Entity entity, float range) {
+    public boolean hasLineOfSight(E entity, LivingEntity target) {
+        if (entity instanceof LivingEntity living) {
+            return living.hasLineOfSight(target);
+        }
+        return false;
+    }
+
+    public float coneRadius(E entity, float range) {
         return (float) Math.tan(Math.clamp(this.fov(entity), 0, 179) / (360 / Math.PI)) * (range / (float) Math.PI);
     }
 
-    public float fov(Entity entity) {
+    public float fov(E entity) {
         return this.fov().apply(entity);
     }
 
-    public float range(Entity entity) {
+    public float range(E entity) {
         return this.range().apply(entity);
     }
 
-    public float range(Entity entity, LivingEntity target) {
+    public float range(E entity, LivingEntity target) {
         return this.range(entity) * (target.level() instanceof ServerLevel serverLevel
                 ? (float) target.getVisibilityPercent(serverLevel, entity)
                 : SCUtil.getPlayerVisibility(entity, target));
     }
 
-    public Vec3 eyePos(Entity entity) {
+    public Vec3 eyePos(E entity) {
         return entity.position().add(0, this.eyeOffset(entity), 0);
     }
 
-    public float eyeOffset(Entity entity) {
+    public float eyeOffset(E entity) {
         return this.eyeOffset.apply(entity);
     }
 
-    public Vec3 direction3(Entity entity) {
+    public Vec3 direction3(E entity) {
         return Vec3.directionFromRotation(this.direction(entity));
     }
 
-    public Vec2 direction(Entity entity) {
+    public Vec2 direction(E entity) {
         return this.direction(entity, 0F);
     }
 
-    public Vec2 direction(Entity entity, float tickProgress) {
+    public Vec2 direction(E entity, float tickProgress) {
         return this.direction.apply(entity, tickProgress);
     }
 
-    public static Builder builder() {
-        return new Builder();
+    public static <E extends LivingEntity> Builder<E> builder() {
+        return new Builder<>();
     }
 
-    public static class Builder {
-        Function<Entity, Float> fov = entity -> DEFAULT_FOV;
-        Function<Entity, Float> range = entity -> {
-            if (entity instanceof LivingEntity living) {
-                AttributeInstance range = living.getAttribute(Attributes.FOLLOW_RANGE);
+    public static class Builder<E extends LivingEntity> {
+        Function<E, Float> fov = entity -> DEFAULT_FOV;
+        Function<E, Float> range = entity -> {
+            AttributeInstance range = entity.getAttribute(Attributes.FOLLOW_RANGE);
 
-                if (range != null) {
-                    return (float) range.getValue();
-                }
+            if (range != null) {
+                return (float) range.getValue();
             }
             return DEFAULT_RANGE;
         };
-        Function<Entity, Float> eyeOffset = Entity::getEyeHeight;
-        BiFunction<Entity, Float, Vec2> direction = (entity, partialTicks) ->
+        Function<E, Float> eyeOffset = Entity::getEyeHeight;
+        BiFunction<E, Float, Vec2> direction = (entity, partialTicks) ->
                 new Vec2(entity.getViewXRot(partialTicks), entity.getViewYRot(partialTicks));
 
         protected Builder() {}
 
-        public Builder fov(float fov) {
+        public Builder<E> fov(float fov) {
             return this.fov(entity -> fov);
         }
 
-        public Builder fov(Function<Entity, Float> fov) {
+        public Builder<E> fov(Function<E, Float> fov) {
             this.fov = fov;
             return this;
         }
 
-        public Builder range(float range) {
+        public Builder<E> range(float range) {
             return this.range(entity -> range);
         }
 
-        public Builder range(Function<Entity, Float> range) {
+        public Builder<E> range(Function<E, Float> range) {
             this.range = range;
             return this;
         }
 
-        public Builder eyePos(Function<Entity, Float> eyeOffset) {
+        public Builder<E> eyePos(Function<E, Float> eyeOffset) {
             this.eyeOffset = eyeOffset;
             return this;
         }
 
-        public Builder direction(BiFunction<Entity, Float, Vec2> direction) {
+        public Builder<E> direction(BiFunction<E, Float, Vec2> direction) {
             this.direction = direction;
             return this;
         }
 
-        public EntityVision build() {
-            return new EntityVision(this.fov, this.range, this.eyeOffset, this.direction);
+        public EntityVision<E> build() {
+            return new EntityVision<E>(this.fov, this.range, this.eyeOffset, this.direction);
         }
     }
 }

@@ -39,7 +39,10 @@ public class SCConfig extends MidnightConfig {
     public static boolean entityGoalTweaks = false;
 
     @Comment
-    public static String spacer$color;
+    public static String spacer$cone;
+
+    @Entry(min = 0F, max = 1F, isSlider = true)
+    public static float coneComplexity = 0.6F;
 
     @Entry(isColor = true)
     public static String coneColor = "#FF1100";

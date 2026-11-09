@@ -25,6 +25,9 @@
   "stealthcraft.midnightconfig.entityGoalTweaks": "Entity Goal Tweaks",
   "stealthcraft.midnightconfig.entityGoalTweaks.tooltip": "Controls if entity goals should be tweaked to avoid possibly frustrating behavior (such as entities looking at the player).",
 
+  "stealthcraft.midnightconfig.coneComplexity": "Cone Complexity",
+  "stealthcraft.midnightconfig.coneComplexity.tooltip": "The complexity of a rendered cone. §c\nWhen set to lower values, cones may not cover the entire view area.",
+
   "stealthcraft.midnightconfig.coneColor": "Cone Color",
   "stealthcraft.midnightconfig.coneColorOpacity": "Cone Opacity",
 

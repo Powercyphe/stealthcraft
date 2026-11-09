@@ -19,9 +19,9 @@ public abstract class EntityRendererMixin<T extends Entity, S extends EntityRend
     @ModifyReturnValue(method = "shouldRender", at = @At("RETURN"))
     private boolean stealthcraft$submit(boolean original, T entity, Frustum culler) {
         if (entity instanceof LivingEntity living) {
-            EntityVisionHandler handler = living.getVisionHandler();
+            EntityVisionHandler<LivingEntity> handler = living.getVisionHandler();
             if (handler != null) {
-                EntityVision vision = handler.getVision();
+                EntityVision<LivingEntity> vision = handler.getVision();
 
                 double range = vision.range(living);
                 AABB coneBox = AABB.ofSize(vision.eyePos(living)

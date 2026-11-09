@@ -32,28 +32,10 @@ public abstract class EnderDragonRendererMixin extends EntityRenderer<EnderDrago
     }
 
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/EnderDragonRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
-            at = @At("TAIL"))
+            at = @At("HEAD"))
     private void stealthcraft$enderDragonCone(EnderDragonRenderState state, PoseStack poseStack, SubmitNodeCollector submit, CameraRenderState camera, CallbackInfo ci) {
         NoticeRenderState noticeState = NoticeRenderState.get(state);
         noticeState.cameraState = camera;
-
-        poseStack.pushPose();
-        poseStack.scale(-1.0F, -1.0F, 1.0F);
-        poseStack.translate(0.0F, -1.501F, 0.0F);
-
-        poseStack.pushPose();
-        poseStack.translate(0, 1.501F, 0);
-        poseStack.scale(-1, -1, 1);
-
-        poseStack.rotateAround(Axis.YP.rotationDegrees(-noticeState.coneRotation.y)
-                        .mul(Axis.XP.rotationDegrees(-noticeState.coneRotation.x)),
-                0F, noticeState.coneY, 0F);
-
-        submit.submitCustomGeometry(poseStack, SCRenderTypes.CONE_FILL, new ConeRenderer(noticeState.coneQuads));
-        poseStack.popPose();
-
-        poseStack.popPose();
-
     }
 
     @Inject(method = "submit(Lnet/minecraft/client/renderer/entity/state/EnderDragonRenderState;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/SubmitNodeCollector;Lnet/minecraft/client/renderer/state/level/CameraRenderState;)V",
@@ -61,6 +43,15 @@ public abstract class EnderDragonRendererMixin extends EntityRenderer<EnderDrago
     private void stealthcraft$enderDragonNotice(EnderDragonRenderState state, PoseStack poseStack, SubmitNodeCollector submit, CameraRenderState camera, CallbackInfo ci,
                                                 @Local(name = "yr", type = float.class) float yr, @Local(name = "rot2", type = float.class) float rot2) {
         NoticeRenderState noticeState = NoticeRenderState.get(state);
+
+        poseStack.pushPose();
+        poseStack.rotateAround(Axis.YP.rotationDegrees(-noticeState.coneRotation.y)
+                        .mul(Axis.XP.rotationDegrees(-noticeState.coneRotation.x)),
+                0F, noticeState.coneY, 0F);
+
+        submit.submitCustomGeometry(poseStack, SCRenderTypes.CONE_FILL, new ConeRenderer(noticeState.coneQuads));
+
+        poseStack.popPose();
         poseStack.pushPose();
 
         poseStack.scale(-1, 1, 1);
