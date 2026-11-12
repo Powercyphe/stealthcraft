@@ -29,7 +29,7 @@ public class SCConfig extends MidnightConfig {
     public static int targetTicks = 300;
 
     @Comment
-    public static String spacer$mode;
+    public static String spacer$misc;
 
 
     @Entry(min = 0, max = 100, isSlider = true)
@@ -38,8 +38,18 @@ public class SCConfig extends MidnightConfig {
     @Entry
     public static boolean entityGoalTweaks = false;
 
+    @Entry
+    public static boolean entityShadowStrike = false;
+
+    @Entry
+    @Condition(requiredOption = "entityShadowStrike", requiredValue = "true")
+    public static float entityShadowStrikeMultiplier = 3F;
+
     @Comment
     public static String spacer$cone;
+
+    @Entry(min = 1, max = 16, isSlider = true)
+    public static int coneRenderDistance = 4;
 
     @Entry(min = 0F, max = 1F, isSlider = true)
     public static float coneComplexity = 0.6F;

@@ -2,10 +2,12 @@ package dev.powercyphe.stealthcraft.mixin;
 
 import dev.powercyphe.stealthcraft.common.entity.EntityVisionHandler;
 import dev.powercyphe.stealthcraft.common.entity.VisionHandlerHolder;
+import dev.powercyphe.stealthcraft.common.init.SCTags;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -27,7 +29,7 @@ public abstract class LivingEntityMixin extends Entity implements VisionHandlerH
     private void stealthcraft$initVisionHandler(EntityType<?> type, Level level, CallbackInfo ci) {
         LivingEntity entity = (LivingEntity) (Object) this;
 
-        if (!(entity instanceof Player)) {
+        if (!level.registryAccess().lookupOrThrow(Registries.ENTITY_TYPE).wrapAsHolder(type).is(SCTags.NO_VISION_HANDLER)) {
             this.visionHandler = new EntityVisionHandler<>(entity);
         }
     }

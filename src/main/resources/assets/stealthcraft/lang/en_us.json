@@ -25,6 +25,15 @@
   "stealthcraft.midnightconfig.entityGoalTweaks": "Entity Goal Tweaks",
   "stealthcraft.midnightconfig.entityGoalTweaks.tooltip": "Controls if entity goals should be tweaked to avoid possibly frustrating behavior (such as entities looking at the player).",
 
+  "stealthcraft.midnightconfig.entityShadowStrike": "Entity Shadow Strike",
+  "stealthcraft.midnightconfig.entityShadowStrike.tooltip": "Whether attacking an entity from behind should deal extra damage when unnoticed.",
+
+  "stealthcraft.midnightconfig.entityShadowStrikeMultiplier": "Entity Shadow Strike Multiplier",
+  "stealthcraft.midnightconfig.entityShadowStrikeMultiplier.tooltip": "The multiplier of damage dealt when using shadow strike.",
+
+
+  "stealthcraft.midnightconfig.coneRenderDistance": "Cone Render Distance",
+
   "stealthcraft.midnightconfig.coneComplexity": "Cone Complexity",
   "stealthcraft.midnightconfig.coneComplexity.tooltip": "The complexity of a rendered cone. §c\nWhen set to lower values, cones may not cover the entire view area.",
 

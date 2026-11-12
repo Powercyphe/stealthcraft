@@ -1,6 +1,9 @@
 {
   "required": true,
   "minVersion": "0.8",
+  "mixinextras": {
+    "minVersion": "0.5.0"
+  },
   "package": "dev.powercyphe.stealthcraft.mixin",
   "compatibilityLevel": "JAVA_25",
   "mixins": [
@@ -8,6 +11,7 @@
     "GoalSelectorMixin",
     "LivingEntityMixin",
     "NearestAttackableTargetGoalMixin",
+    "PlayerMixin",
     "accessor.LookAtPlayerGoalAccessor",
     "accessor.TargetGoalAccessor"
   ],

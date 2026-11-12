@@ -120,7 +120,11 @@ public record EntityVision<E extends LivingEntity>(Function<E, Float> fov, Funct
             return this;
         }
 
-        public Builder<E> eyePos(Function<E, Float> eyeOffset) {
+        public Builder<E> eyeOffset(float eyeOffset) {
+            return this.range(entity -> eyeOffset);
+        }
+
+        public Builder<E> eyeOffset(Function<E, Float> eyeOffset) {
             this.eyeOffset = eyeOffset;
             return this;
         }

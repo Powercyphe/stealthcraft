@@ -1,5 +1,6 @@
 package dev.powercyphe.stealthcraft.client.render.state;
 
+import dev.powercyphe.stealthcraft.common.SCConfig;
 import dev.powercyphe.stealthcraft.common.entity.EntityVisionHandler;
 import dev.powercyphe.stealthcraft.common.util.Quad;
 import net.minecraft.client.Minecraft;
@@ -30,7 +31,11 @@ public class NoticeRenderState {
             if (handler.coneChanged) {
                 handler.coneChanged = false;
 
-                handler.cone = handler.getVision().getQuads(entity, player);
+                if (SCConfig.coneColorOpacity > 0) {
+                    handler.cone = handler.getVision().getQuads(entity, player);
+                } else {
+                    handler.cone = new ArrayList<>();
+                }
             }
 
             this.coneQuads = handler.cone;

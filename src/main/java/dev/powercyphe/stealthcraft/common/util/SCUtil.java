@@ -1,23 +1,32 @@
 package dev.powercyphe.stealthcraft.common.util;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParseException;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.DynamicOps;
 import dev.powercyphe.stealthcraft.common.SCConfig;
 import dev.powercyphe.stealthcraft.common.init.SCAttachmentTypes;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.chat.Component;
+import net.minecraft.resources.FileToIdConverter;
+import net.minecraft.resources.Identifier;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.server.packs.resources.Resource;
+import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.Mth;
+import net.minecraft.util.StrictJsonParser;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.boss.enderdragon.EnderDragon;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 
+import java.io.IOException;
+import java.io.Reader;
 import java.util.*;
+
+import static dev.powercyphe.stealthcraft.common.StealthCraft.LOGGER;
 
 public interface SCUtil {
 
@@ -107,12 +116,49 @@ public interface SCUtil {
 
     static void updatePlayerVisibility(ServerLevel level, LivingEntity entity) {
         Map<UUID, Float> vis = new HashMap<>();
-        var players = level.getPlayers(p -> true);
+        var players = level.getPlayers(_ -> true);
 
         for (ServerPlayer player : players) {
             vis.put(player.getUUID(), (float) player.getVisibilityPercent(level, entity));
         }
 
         entity.setAttached(SCAttachmentTypes.PLAYER_VISIBILITY, vis);
+    }
+
+    public static <T> void scanDirectory(
+            final ResourceManager manager, final FileToIdConverter lister, final DynamicOps<JsonElement> ops, final Codec<T> codec, final Map<Identifier, T> result
+    ) {
+        for (Map.Entry<Identifier, Resource> entry : lister.listMatchingResources(manager).entrySet()) {
+            Identifier location = entry.getKey();
+            Identifier id = lister.fileToId(location);
+
+            try {
+                Reader reader = entry.getValue().openAsReader();
+
+                try {
+                    codec.parse(ops, StrictJsonParser.parse(reader)).ifSuccess(parsed -> {
+                        if (result.putIfAbsent(id, parsed) != null) {
+                            throw new IllegalStateException("Duplicate data file ignored with ID " + id);
+                        }
+                    }).ifError(error -> LOGGER.error("Couldn't parse data file '{}' from '{}': {}", new Object[]{id, location, error}));
+                } catch (Throwable var13) {
+                    if (reader != null) {
+                        try {
+                            reader.close();
+                        } catch (Throwable var12) {
+                            var13.addSuppressed(var12);
+                        }
+                    }
+
+                    throw var13;
+                }
+
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (JsonParseException | IllegalArgumentException | IOException e) {
+                LOGGER.error("Couldn't parse data file '{}' from '{}'", new Object[]{id, location, e});
+            }
+        }
     }
 }

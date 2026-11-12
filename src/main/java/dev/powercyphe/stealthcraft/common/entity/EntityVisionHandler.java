@@ -1,13 +1,11 @@
 package dev.powercyphe.stealthcraft.common.entity;
 
 import dev.powercyphe.stealthcraft.common.SCConfig;
+import dev.powercyphe.stealthcraft.common.init.EntityVisionOverrideRegistry;
 import dev.powercyphe.stealthcraft.common.init.SCAttachmentTypes;
 import dev.powercyphe.stealthcraft.common.init.SCMemoryModuleTypes;
 import dev.powercyphe.stealthcraft.common.util.Quad;
 import dev.powercyphe.stealthcraft.common.util.SCUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -37,7 +35,7 @@ public class EntityVisionHandler<E extends LivingEntity> {
 
     public EntityVisionHandler(E entity) {
         this.entity = entity;
-        this.vision = EntityVisionRegistry.getVisionFor(entity);
+        this.vision = EntityVisionOverrideRegistry.getVisionFor(entity);
     }
 
     public void tick() {
@@ -141,6 +139,10 @@ public class EntityVisionHandler<E extends LivingEntity> {
         return this.vision;
     }
 
+    public float getNoticeProgress() {
+        return this.getNoticeProgress(1F);
+    }
+
     public float getNoticeProgress(float partialTicks) {
         return Mth.lerp(partialTicks, this.lastNotice, this.notice());
     }
@@ -168,6 +170,6 @@ public class EntityVisionHandler<E extends LivingEntity> {
     public boolean shouldRender(Entity camera) {
         float range = this.getVision().range(this.entity);
         return this.entity.distanceTo(camera) <
-                 range + Math.sqrt(range) * 3;
+                 range + Math.sqrt(range) * SCConfig.coneRenderDistance;
     }
 }

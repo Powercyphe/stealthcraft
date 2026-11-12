@@ -19,6 +19,9 @@
     ],
     "client": [
       "dev.powercyphe.stealthcraft.client.StealthCraftClient"
+    ],
+    "fabric-datagen": [
+      "dev.powercyphe.stealthcraft.common.data.SCDatagen"
     ]
   },
   "mixins": [
